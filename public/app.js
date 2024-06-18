@@ -16,20 +16,22 @@ window.onload = function() {
 
     var myMarker; // Marker for the user's location
 
-    var countdownElement = document.getElementById('countdown');
+var countdownElement = document.getElementById('countdown');
 
-    var countdown; // Countdown timer
+var countdown; // Countdown timer
 
-    // Function to update countdown timer
-    function updateCountdown() {
-        countdownElement.textContent = 'Updating location in ' + countdown + ' seconds...';
-        countdown--;
-    }
+// Function to update countdown timer
+function updateCountdown() {
+    countdownElement.textContent = 'Updating location in ' + countdown + ' seconds...';
+    countdown--;
+}
 
-    // Update countdown timer every second
-    setInterval(updateCountdown, 1000);
+// Update countdown timer every second
+setInterval(updateCountdown, 1000);
 
-    navigator.geolocation.watchPosition((position) => {
+// Function to update user's location
+function updateLocation() {
+    navigator.geolocation.getCurrentPosition((position) => {
         var myLocation = { latitude: position.coords.latitude, longitude: position.coords.longitude };
         map.setView([myLocation.latitude, myLocation.longitude], 16); // Set view to user's location
 
@@ -40,19 +42,20 @@ window.onload = function() {
 
         socket.emit('locationUpdate', myLocation);
     });
+}
 
-    socket.on('initialLocations', (locations) => {
-        for (let id in locations) {
-            let location = locations[id];
-            markers[id] = L.marker([location.latitude, location.longitude]).addTo(map); // Add marker for each location
-        }
-    });
+socket.on('initialLocations', (locations) => {
+    for (let id in locations) {
+        let location = locations[id];
+        markers[id] = L.marker([location.latitude, location.longitude]).addTo(map); // Add marker for each location
+    }
+});
 
-    socket.on('initialCountdown', function(initialCountdown) {
-        countdown = initialCountdown;
-    });
+socket.on('initialCountdown', function(initialCountdown) {
+    countdown = initialCountdown;
+});
 
-    socket.on('newLocation', (data) => {
+socket.on('newLocation', (data) => {
         if (markers[data.id]) {
             map.removeLayer(markers[data.id]); // Remove old marker
         }
@@ -64,7 +67,6 @@ window.onload = function() {
         delete markers[id]; // Remove marker from object
     });
 
-    socket.on('updateLocation', function() {
-        countdown = 60;
-    });
+    // Update location when countdown hits 0
+socket.on('updateLocation', updateLocation);
 }

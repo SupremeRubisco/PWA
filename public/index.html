@@ -6,12 +6,12 @@
     <link rel="manifest" href="/manifest.json">
     <style>
         #mapid {
-            height: 600px;
+            height: 50vh;
+            top: 50%;
             width: 100%;
         }
 
         #countdown{
-            position: absolute;
             z-index: 9999;
         }
     </style>
@@ -20,7 +20,7 @@
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="/app.js"></script>
-    <p id="countdown">Updating location in 60 seconds...</p>
     <div id="mapid"></div>
+    <p id="countdown">Updating location in 60 seconds...</p>
 </body>
 </html>

@@ -16,32 +16,36 @@ window.onload = function() {
 
     var myMarker; // Marker for the user's location
 
-var countdownElement = document.getElementById('countdown');
+    var countdownElement = document.getElementById('countdown');
 
-var countdown; // Countdown timer
+    var countdown; // Countdown timer
 
-// Function to update countdown timer
-function updateCountdown() {
-    countdownElement.textContent = 'Updating location in ' + countdown + ' seconds...';
-    countdown--;
-}
+    // Function to update countdown timer
+    function updateCountdown() {
+        countdownElement.textContent = 'Updating location in ' + countdown + ' seconds...';
+        countdown--;
+    }
 
-// Update countdown timer every second
-setInterval(updateCountdown, 1000);
+    // Update countdown timer every second
+    setInterval(updateCountdown, 1000);
 
-// Function to update user's location
-function updateLocation() {
-    navigator.geolocation.getCurrentPosition((position) => {
-        var myLocation = { latitude: position.coords.latitude, longitude: position.coords.longitude };
-        map.setView([myLocation.latitude, myLocation.longitude], 16); // Set view to user's location
+    // Function to update user's location
+    function updateLocation() {
+        navigator.geolocation.getCurrentPosition((position) => {
+            var myLocation = { latitude: position.coords.latitude, longitude: position.coords.longitude };
+            map.setView([myLocation.latitude, myLocation.longitude], 16); // Set view to user's location
 
-        if (myMarker) {
-            map.removeLayer(myMarker); // Remove old marker
-        }
-        myMarker = L.marker([myLocation.latitude, myLocation.longitude]).addTo(map); // Add new marker
+            if (myMarker) {
+                map.removeLayer(myMarker); // Remove old marker
+            }
 
-        socket.emit('locationUpdate', myLocation);
-    });
+            // Add new marker
+            myMarker = L.marker([myLocation.latitude, myLocation.longitude]).addTo(map);
+        });
+    }
+
+    // Get user's location immediately after the function is defined
+    updateLocation();
 }
 
 socket.on('initialLocations', (locations) => {

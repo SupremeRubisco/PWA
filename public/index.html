@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Location PWA</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+    <link rel="manifest" href="/manifest.json">
+    <style>
+        #mapid {
+            height: 600px;
+            width: 100%;
+        }
+
+        #countdown{
+            position: absolute;
+            z-index: 9999;
+        }
+    </style>
+</head>
+<body>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/app.js"></script>
+    <p id="countdown">Updating location in 60 seconds...</p>
+    <div id="mapid"></div>
+</body>
+</html>

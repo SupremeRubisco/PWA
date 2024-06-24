@@ -20,14 +20,29 @@ window.onload = function() {
 
     var countdown; // Countdown timer
 
-    // Function to update countdown timer
-    function updateCountdown() {
-        countdownElement.textContent = 'Updating location in ' + countdown + ' seconds...';
-        countdown--;
-    }
+// Assuming socket is already connected
+socket.on('initialCountdown', function(initialCountdownValue) {
+    countdown = initialCountdownValue; // Receive and set the initial countdown value from the server
+    updateCountdownDisplay(); // Update the display immediately upon receiving
+});
 
-    // Update countdown timer every second
-    setInterval(updateCountdown, 1000);
+function updateCountdownDisplay() {
+    if (countdown > 0) {
+        countdownElement.textContent = 'Updating location in ' + countdown + ' seconds...';
+    } else {
+        countdownElement.textContent = 'Updating location...';
+    }
+}
+
+// Update countdown timer every second
+setInterval(function() {
+    if (countdown > 0) {
+        countdown--;
+        updateCountdownDisplay();
+    }
+}, 1000);
+
+// Ensure the rest of your code remains the same
 
     // Function to update user's location
     function updateLocation() {
@@ -73,4 +88,3 @@ socket.on('newLocation', (data) => {
 
     // Update location when countdown hits 0
 socket.on('updateLocation', updateLocation);
-}

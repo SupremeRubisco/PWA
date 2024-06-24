@@ -22,21 +22,28 @@ window.onload = function() {
 
 // Assuming socket is already connected
 socket.on('initialCountdown', function(initialCountdownValue) {
-    countdown = initialCountdownValue; // Receive and set the initial countdown value from the server
+    countdown = Number(initialCountdownValue); // Convert to number to ensure arithmetic operations work as expected
+    if (isNaN(countdown)) {
+        console.error('Received NaN for initialCountdownValue', initialCountdownValue);
+        countdown = 60; // Set a default value or handle as appropriate
+    }
     updateCountdownDisplay(); // Update the display immediately upon receiving
 });
 
 function updateCountdownDisplay() {
-    if (countdown > 0) {
+    if (!isNaN(countdown) && countdown > 0) {
         countdownElement.textContent = 'Updating location in ' + countdown + ' seconds...';
-    } else {
+    } else if (!isNaN(countdown)) {
         countdownElement.textContent = 'Updating location...';
+    } else {
+        // Handle NaN case, perhaps by not updating the display or showing an error/default message
+        countdownElement.textContent = 'Waiting for update...';
     }
 }
 
 // Update countdown timer every second
 setInterval(function() {
-    if (countdown > 0) {
+    if (!isNaN(countdown) && countdown > 0) {
         countdown--;
         updateCountdownDisplay();
     }
